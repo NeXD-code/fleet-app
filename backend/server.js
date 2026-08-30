@@ -849,6 +849,7 @@ app.delete("/api/maintenance/history", (req, res) => {
   `).run();
   res.json({ message: "Historique des maintenances supprimé." });
 });
+
 app.patch("/api/vehicles/:id/initial-mileage", (req, res) => {
   const vehicleId = Number(req.params.id);
   const { mileage } = req.body;
@@ -860,17 +861,21 @@ app.patch("/api/vehicles/:id/initial-mileage", (req, res) => {
   const vehicle = db.prepare("SELECT * FROM vehicles WHERE id = ?").get(vehicleId);
   if (!vehicle) return res.status(404).json({ error: "Véhicule introuvable." });
 
+  const firstUser = db.prepare("SELECT id FROM users LIMIT 1").get();
+  const firstSite = db.prepare("SELECT id FROM sites LIMIT 1").get();
+
   const ts = nowIso();
   db.prepare(`
     INSERT INTO reservations (
       vehicle_id, user_id, from_site_id, to_site_id,
       start_at, end_at, purpose, start_mileage, end_mileage,
       departure_notes, return_notes, status, created_at, updated_at
-    ) VALUES (?, 1, 1, 1, ?, ?, 'Initialisation', ?, ?, 'Initialisation', 'Initialisation', 'completed', ?, ?)
-  `).run(vehicleId, ts, ts, Number(mileage), Number(mileage), ts, ts);
+    ) VALUES (?, ?, ?, ?, ?, ?, 'Initialisation', ?, ?, 'Initialisation', 'Initialisation', 'completed', ?, ?)
+  `).run(vehicleId, firstUser.id, firstSite.id, firstSite.id, ts, ts, Number(mileage), Number(mileage), ts, ts);
 
   res.json({ message: "Kilométrage initialisé." });
 });
+
 const server = app.listen(PORT, () => {
   console.log("SERVER FILE OK - ROUTES MAINTENANCE CHARGEES");
   console.log(`API flotte démarrée sur http://localhost:${PORT}`);
