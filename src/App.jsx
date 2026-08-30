@@ -1766,7 +1766,7 @@ if (currentPage === "admin") {
                       <p><strong>{v.name}</strong></p>
                       <p>{v.plate} — {v.type}</p>
                       <p>{v.fuelType || "—"}</p>
-                      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                                            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                         <button style={styles.buttonPrimary} onClick={() => setEditingVehicle(v)}>Modifier</button>
                         <button style={{ ...styles.buttonSecondary, color: "#dc2626" }} onClick={async () => {
                           if (!window.confirm(`Supprimer ${v.name} ?`)) return;
@@ -1777,6 +1777,35 @@ if (currentPage === "admin") {
                           loadVehicles();
                         }}>Supprimer</button>
                       </div>
+                      <div style={{ marginTop: 8 }}>
+  <input
+    type="text"
+    placeholder="Km initial"
+    id={`km-init-${v.id}`}
+    style={{ ...styles.input, marginBottom: 6 }}
+  />
+  <button
+    style={{ ...styles.buttonSecondary, fontSize: 12 }}
+    onClick={async () => {
+      const input = document.getElementById(`km-init-${v.id}`);
+      const mileage = input.value.replace(/\s/g, "");
+      if (!mileage) { setError("Entre un kilométrage."); return; }
+      const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${v.id.replace("v", "")}/initial-mileage`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mileage: Number(mileage) }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error); return; }
+      input.value = "";
+      setSuccess(`Kilométrage initialisé pour ${v.name}.`);
+      loadReservations();
+    }}
+  >
+    Initialiser km
+  </button>
+</div>
+                    
                     </>
                   )}
                 </div>
