@@ -853,7 +853,7 @@ app.patch("/api/vehicles/:id/initial-mileage", (req, res) => {
   const vehicleId = Number(req.params.id);
   const { mileage } = req.body;
 
-  if (!mileage || isNaN(Number(mileage))) {
+  if (!mileage && mileage !== 0) {
     return res.status(400).json({ error: "Kilométrage invalide." });
   }
 
