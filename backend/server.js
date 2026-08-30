@@ -890,4 +890,4 @@ process.on("unhandledRejection", (err) => {
 });
 
 // Garde le process actif de façon simple pendant les tests locaux
-setInterval(() => {}, 60 * 60 * 1000);
+setInterval(() => {}, 60 * 60 * 1000); 
