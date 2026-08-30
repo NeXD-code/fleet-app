@@ -265,7 +265,7 @@ const [returnForm, setReturnForm] = useState({
   async function loadDocuments(vehicleId) {
   try {
     const id = vehicleId.replace("v", "");
-    const res = await fetch(`http://localhost:3001/api/vehicles/${id}/documents`);
+    const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${id}/documents`);
     const data = await res.json();
     setDocuments(data);
   } catch (err) {
@@ -276,7 +276,7 @@ const [returnForm, setReturnForm] = useState({
 async function loadVehicleReports(vehicleId) {
   try {
     const id = vehicleId.replace("v", "");
-    const res = await fetch(`http://localhost:3001/api/vehicles/${id}/reports`);
+    const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${id}/reports`);
     const data = await res.json();
     setVehicleReports(data);
   } catch (err) {
@@ -286,7 +286,7 @@ async function loadVehicleReports(vehicleId) {
 
   async function loadVehicles() {
   try {
-    const res = await fetch("http://localhost:3001/api/vehicles");
+    const res = await fetch("https://fleet-app-1j2a.onrender.com/api/vehicles");
     const data = await res.json();
 
     const mappedVehicles = data.map((v) => ({
@@ -313,7 +313,7 @@ async function loadVehicleReports(vehicleId) {
 
 function handleSaveVehicleSettings() {
   console.log("SAVE SETTINGS:", selectedVehicle.id, vehicleSettingsForm);
-  fetch(`http://localhost:3001/api/vehicles/${selectedVehicle.id.replace("v", "")}/settings`, {
+  fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${selectedVehicle.id.replace("v", "")}/settings`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -330,7 +330,7 @@ function handleSaveVehicleSettings() {
     .then(async () => {
   console.log("SETTINGS SAVED OK");
   await loadVehicles();
-  const res = await fetch("http://localhost:3001/api/vehicles");
+  const res = await fetch("https://fleet-app-1j2a.onrender.com/api/vehicles");
   const data = await res.json();
   const updated = data.find((v) => `v${v.id}` === selectedVehicle.id);
   if (updated) {
@@ -350,7 +350,7 @@ function handleSaveVehicleSettings() {
 }
 async function loadReservations() {
   try {
-    const res = await fetch("http://localhost:3001/api/reservations");
+    const res = await fetch("https://fleet-app-1j2a.onrender.com/api/reservations");
     const data = await res.json();
 console.log("RAW END MILEAGE:", data?.map(r => r.end_mileage));
 console.log("RAW RETURN NOTES:", data?.map(r => r.return_notes));
@@ -364,7 +364,7 @@ console.log("RAW RETURN NOTES:", data?.map(r => r.return_notes));
 
 async function loadMaintenanceHistory() {
   try {
-    const res = await fetch("http://localhost:3001/api/maintenance");
+    const res = await fetch("https://fleet-app-1j2a.onrender.com/api/maintenance");
     const data = await res.json();
 
     setMaintenanceHistory(data);
@@ -381,7 +381,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/sites")
+    fetch("https://fleet-app-1j2a.onrender.com/api/sites")
       .then((res) => res.json())
       .then((data) => {
         const mappedSites = data.map((s) => ({
@@ -399,7 +399,7 @@ useEffect(() => {
 }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/users")
+    fetch("https://fleet-app-1j2a.onrender.com/api/users")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -572,7 +572,7 @@ if (hasConflict(form.vehicleId, form.start, form.end)) {
   return;
 }
 
-    fetch("http://localhost:3001/api/reservations", {
+    fetch("https://fleet-app-1j2a.onrender.com/api/reservations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -636,7 +636,7 @@ departureNotes: "",
     setError("");
     setSuccess("");
 
-    fetch(`http://localhost:3001/api/reservations/${reservationId}/cancel`, {
+    fetch(`https://fleet-app-1j2a.onrender.com/api/reservations/${reservationId}/cancel`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -714,7 +714,7 @@ if (endMileage <= startMileage) {
 console.log("COMPLETE RESERVATION ID:", reservationId);
 
 fetch(
-  `http://localhost:3001/api/reservations/${reservationId}/complete`,
+  `https://fleet-app-1j2a.onrender.com/api/reservations/${reservationId}/complete`,
   {
     method: "PATCH",
     headers: {
@@ -780,7 +780,7 @@ fetch(
   }
 
   // Remise disponible
-  fetch(`http://localhost:3001/api/vehicles/${vehicleId.replace("v", "")}/available`, {
+  fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${vehicleId.replace("v", "")}/available`, {
   method: "PATCH",
 })
   .then(async (res) => {
@@ -1423,7 +1423,7 @@ if (currentPage === "vehicle" && selectedVehicle) {
             <button
               style={{ ...styles.buttonSecondary, marginTop: 8, fontSize: 12 }}
               onClick={async () => {
-                await fetch(`http://localhost:3001/api/reports/${r.id}/resolve`, {
+                await fetch(`https://fleet-app-1j2a.onrender.com/api/reports/${r.id}/resolve`, {
                   method: "PATCH",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ resolved_by: `${currentUser.first_name} ${currentUser.last_name}` }),
@@ -1479,7 +1479,7 @@ if (currentPage === "vehicle" && selectedVehicle) {
         formData.append("file", docFile);
         formData.append("label", docLabel || docFile.name);
         const id = selectedVehicle.id.replace("v", "");
-        const res = await fetch(`http://localhost:3001/api/vehicles/${id}/documents`, {
+        const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${id}/documents`, {
           method: "POST",
           body: formData,
         });
@@ -1506,7 +1506,7 @@ if (currentPage === "vehicle" && selectedVehicle) {
           <p style={{ fontSize: 12, color: "#666" }}>{new Date(doc.created_at).toLocaleDateString("fr-FR")}</p>
           <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
             <a
-              href={`http://localhost:3001/api/documents/${doc.filename}`}
+              href={`https://fleet-app-1j2a.onrender.com/api/documents/${doc.filename}`}
               target="_blank"
               rel="noreferrer"
               style={{ ...styles.buttonPrimary, textDecoration: "none", fontSize: 13 }}
@@ -1517,7 +1517,7 @@ if (currentPage === "vehicle" && selectedVehicle) {
               style={{ ...styles.buttonSecondary, fontSize: 13 }}
               onClick={async () => {
                 if (!window.confirm("Supprimer ce document ?")) return;
-                await fetch(`http://localhost:3001/api/documents/${doc.id}`, { method: "DELETE" });
+                await fetch(`https://fleet-app-1j2a.onrender.com/api/documents/${doc.id}`, { method: "DELETE" });
                 loadDocuments(selectedVehicle.id);
               }}
             >
@@ -1535,7 +1535,7 @@ if (currentPage === "vehicle" && selectedVehicle) {
     style={{ ...styles.buttonSecondary, color: "#dc2626", marginTop: "20px" }}
     onClick={() => {
       if (window.confirm(`Supprimer définitivement ${selectedVehicle.name} ? Cette action est irréversible.`)) {
-        fetch(`http://localhost:3001/api/vehicles/${selectedVehicle.id.replace("v", "")}`, {
+        fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${selectedVehicle.id.replace("v", "")}`, {
           method: "DELETE",
         })
           .then(async (res) => {
@@ -1611,7 +1611,7 @@ if (currentPage === "admin") {
                 style={styles.buttonPrimary}
                 onClick={async () => {
                   if (!newSiteName.trim()) { setError("Nom obligatoire."); return; }
-                  const res = await fetch("http://localhost:3001/api/sites", {
+                  const res = await fetch("https://fleet-app-1j2a.onrender.com/api/sites", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name: newSiteName.trim() }),
@@ -1620,7 +1620,7 @@ if (currentPage === "admin") {
                   if (!res.ok) { setError(data.error); return; }
                   setNewSiteName("");
                   setSuccess("Site ajouté.");
-                  const res2 = await fetch("http://localhost:3001/api/sites");
+                  const res2 = await fetch("https://fleet-app-1j2a.onrender.com/api/sites");
                   const sites2 = await res2.json();
                   setSites(sites2.map((s) => ({ id: `s${s.id}`, name: s.name })));
                 }}
@@ -1636,11 +1636,11 @@ if (currentPage === "admin") {
                     style={{ ...styles.buttonSecondary, color: "#dc2626", marginTop: 8 }}
                     onClick={async () => {
                       if (!window.confirm(`Supprimer ${s.name} ?`)) return;
-                      const res = await fetch(`http://localhost:3001/api/sites/${s.id.replace("s", "")}`, { method: "DELETE" });
+                      const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/sites/${s.id.replace("s", "")}`, { method: "DELETE" });
                       const data = await res.json();
                       if (!res.ok) { setError(data.error); return; }
                       setSuccess("Site supprimé.");
-                      const res2 = await fetch("http://localhost:3001/api/sites");
+                      const res2 = await fetch("https://fleet-app-1j2a.onrender.com/api/sites");
                       const sites2 = await res2.json();
                       setSites(sites2.map((s) => ({ id: `s${s.id}`, name: s.name })));
                     }}
@@ -1702,7 +1702,7 @@ if (currentPage === "admin") {
             <button
               style={{ ...styles.buttonPrimary, marginTop: 16 }}
               onClick={async () => {
-                const res = await fetch("http://localhost:3001/api/vehicles", {
+                const res = await fetch("https://fleet-app-1j2a.onrender.com/api/vehicles", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(newVehicle),
@@ -1740,7 +1740,7 @@ if (currentPage === "admin") {
                       </select>
                       <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                         <button style={styles.buttonPrimary} onClick={async () => {
-                          const res = await fetch(`http://localhost:3001/api/vehicles/${v.id.replace("v", "")}`, {
+                          const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${v.id.replace("v", "")}`, {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -1770,7 +1770,7 @@ if (currentPage === "admin") {
                         <button style={styles.buttonPrimary} onClick={() => setEditingVehicle(v)}>Modifier</button>
                         <button style={{ ...styles.buttonSecondary, color: "#dc2626" }} onClick={async () => {
                           if (!window.confirm(`Supprimer ${v.name} ?`)) return;
-                          const res = await fetch(`http://localhost:3001/api/vehicles/${v.id.replace("v", "")}`, { method: "DELETE" });
+                          const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/vehicles/${v.id.replace("v", "")}`, { method: "DELETE" });
                           const data = await res.json();
                           if (!res.ok) { setError(data.error); return; }
                           setSuccess("Véhicule supprimé.");
@@ -1825,7 +1825,7 @@ if (currentPage === "admin") {
             <button
               style={{ ...styles.buttonPrimary, marginTop: 16 }}
               onClick={async () => {
-                const res = await fetch("http://localhost:3001/api/users", {
+                const res = await fetch("https://fleet-app-1j2a.onrender.com/api/users", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(newUser),
@@ -1834,7 +1834,7 @@ if (currentPage === "admin") {
                 if (!res.ok) { setError(data.error); return; }
                 setNewUser({ first_name: "", last_name: "", email: "", role: "employee", is_authorized_driver: 1, site_id: "" });
                 setSuccess("Utilisateur ajouté.");
-                const res2 = await fetch("http://localhost:3001/api/users");
+                const res2 = await fetch("https://fleet-app-1j2a.onrender.com/api/users");
                 setUsers(await res2.json());
               }}
             >
@@ -1870,7 +1870,7 @@ if (currentPage === "admin") {
                       </div>
                       <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                         <button style={styles.buttonPrimary} onClick={async () => {
-                          const res = await fetch(`http://localhost:3001/api/users/${u.id}`, {
+                          const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/users/${u.id}`, {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(editingUser),
@@ -1879,7 +1879,7 @@ if (currentPage === "admin") {
                           if (!res.ok) { setError(data.error); return; }
                           setEditingUser(null);
                           setSuccess("Utilisateur modifié.");
-                          const res2 = await fetch("http://localhost:3001/api/users");
+                          const res2 = await fetch("https://fleet-app-1j2a.onrender.com/api/users");
                           setUsers(await res2.json());
                         }}>Sauvegarder</button>
                         <button style={styles.buttonSecondary} onClick={() => setEditingUser(null)}>Annuler</button>
@@ -1895,11 +1895,11 @@ if (currentPage === "admin") {
                         <button style={styles.buttonPrimary} onClick={() => setEditingUser(u)}>Modifier</button>
                         <button style={{ ...styles.buttonSecondary, color: "#dc2626" }} onClick={async () => {
                           if (!window.confirm(`Supprimer ${u.first_name} ${u.last_name} ?`)) return;
-                          const res = await fetch(`http://localhost:3001/api/users/${u.id}`, { method: "DELETE" });
+                          const res = await fetch(`https://fleet-app-1j2a.onrender.com/api/users/${u.id}`, { method: "DELETE" });
                           const data = await res.json();
                           if (!res.ok) { setError(data.error); return; }
                           setSuccess("Utilisateur supprimé.");
-                          const res2 = await fetch("http://localhost:3001/api/users");
+                          const res2 = await fetch("https://fleet-app-1j2a.onrender.com/api/users");
                           setUsers(await res2.json());
                         }}>Supprimer</button>
                       </div>
@@ -1921,7 +1921,7 @@ if (currentPage === "admin") {
                 style={{ ...styles.buttonSecondary, color: "#dc2626", marginTop: 8 }}
                 onClick={async () => {
                   if (!window.confirm("Supprimer tout l'historique des réservations ? Cette action est irréversible.")) return;
-                  const res = await fetch("http://localhost:3001/api/reservations/history", { method: "DELETE" });
+                  const res = await fetch("https://fleet-app-1j2a.onrender.com/api/reservations/history", { method: "DELETE" });
                   const data = await res.json();
                   if (!res.ok) { setError(data.error); return; }
                   setSuccess("Historique des réservations supprimé.");
@@ -1941,7 +1941,7 @@ if (currentPage === "admin") {
                 style={{ ...styles.buttonSecondary, color: "#dc2626", marginTop: 8 }}
                 onClick={async () => {
                   if (!window.confirm("Supprimer tout l'historique des maintenances ? Cette action est irréversible.")) return;
-                  const res = await fetch("http://localhost:3001/api/maintenance/history", { method: "DELETE" });
+                  const res = await fetch("https://fleet-app-1j2a.onrender.com/api/maintenance/history", { method: "DELETE" });
                   const data = await res.json();
                   if (!res.ok) { setError(data.error); return; }
                   setSuccess("Historique des maintenances supprimé.");
@@ -2317,7 +2317,7 @@ if (currentPage === "admin") {
 
 setMaintenanceError("");
 
-            fetch("http://localhost:3001/api/maintenance", {
+            fetch("https://fleet-app-1j2a.onrender.com/api/maintenance", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
