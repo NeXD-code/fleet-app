@@ -544,7 +544,7 @@ const vehicleCompletedReservations = reservations
   .filter(
     (r) =>
       r.vehicleId === form.vehicleId &&
-      normalizeStatus(r.status) === "completed" &&
+      normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation" &&
       r.endMileage !== null
   )
   .sort((a, b) => new Date(b.end) - new Date(a.end));
@@ -820,14 +820,14 @@ fetch(
     new Date(r.end) > new Date()
 ).length,
 history: reservations.filter(
-  (r) => normalizeStatus(r.status) === "completed"
+  (r) => normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation"
 ).length,
   };
 const historyByMonth = useMemo(() => {
   return reservations
     .filter(
       (r) =>
-        normalizeStatus(r.status) === "completed" ||
+        (normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation") ||
         normalizeStatus(r.status) === "cancelled"
     )
     .slice()
@@ -904,7 +904,7 @@ const vehicleMaintenances = selectedVehicle
 
 const completedReservations =
   vehicleReservations.filter(
-    (r) => normalizeStatus(r.status) === "completed"
+    (r) => normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation"
   );
 
 const totalKm = completedReservations.reduce(
@@ -983,7 +983,7 @@ if (!currentUser) {
 if (currentPage === "dashboard") {
   const kmByVehicle = vehicles.map((v) => {
     const completed = reservations.filter(
-      (r) => r.vehicleId === v.id && normalizeStatus(r.status) === "completed"
+      (r) => r.vehicleId === v.id && normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation"
     );
     const totalKm = completed.reduce((sum, r) => {
       const start = Number(r.startMileage);
@@ -997,7 +997,7 @@ if (currentPage === "dashboard") {
   const bestVehicle = kmByVehicle[0] || null;
 
   const reservationsByMonth = reservations
-    .filter((r) => normalizeStatus(r.status) === "completed")
+    .filter((r) => normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation")
     .reduce((acc, r) => {
       const monthKey = new Date(r.end).toLocaleDateString("fr-FR", {
         year: "numeric",
@@ -2058,7 +2058,7 @@ if (currentPage === "admin") {
     if (v.revisionIntervalKm && v.lastRevisionKm) {
       const nextRevisionKm = v.lastRevisionKm + v.revisionIntervalKm;
       const lastRes = reservations
-        .filter((r) => r.vehicleId === v.id && normalizeStatus(r.status) === "completed" && r.endMileage)
+        .filter((r) => r.vehicleId === v.id && normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation" && r.endMileage)
         .sort((a, b) => new Date(b.end) - new Date(a.end))[0];
       const currentKm = lastRes ? Number(lastRes.endMileage) : null;
       if (currentKm) {
@@ -2886,7 +2886,7 @@ const topOffset = dayRes
     {(() => {
       const filtered = reservations
         .filter((r) =>
-          normalizeStatus(r.status) === "completed" ||
+          (normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation") ||
           normalizeStatus(r.status) === "cancelled"
         )
         .filter((r) =>
@@ -3081,7 +3081,7 @@ const topOffset = dayRes
     .filter(
       (r) =>
         r.vehicleId === form.vehicleId &&
-        normalizeStatus(r.status) === "completed" &&
+        normalizeStatus(r.status) === "completed" && r.purpose !== "Initialisation" &&
         r.endMileage !== null
     )
     .sort((a, b) => new Date(b.end) - new Date(a.end))[0];
