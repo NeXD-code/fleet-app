@@ -636,7 +636,7 @@ departureNotes: "",
     setError("");
     setSuccess("");
 
-    fetch(`https://fleet-app-1j2a.onrender.com/api/reservations/${reservationId}/cancel`, {
+    fetch(`https://fleet-app-1j2a.onrender.com/api/reservations/${String(reservationId).replace(/^r/, "")}/cancel`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
