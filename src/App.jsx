@@ -1193,9 +1193,12 @@ if (currentPage === "vehicle" && selectedVehicle) {
           <p><strong>Site d'origine :</strong> {selectedVehicle.originSiteName}</p>
           <p>
   <strong>Kilométrage actuel :</strong>{" "}
-  {lastReservation && lastReservation.endMileage
-    ? formatMileage(lastReservation.endMileage) + " km"
-    : "Non renseigné"}
+  {(() => {
+    const lastKm = vehicleReservations
+      .filter((r) => normalizeStatus(r.status) === "completed" && r.endMileage)
+      .sort((a, b) => new Date(b.end) - new Date(a.end))[0];
+    return lastKm ? formatMileage(lastKm.endMileage) + " km" : "Non renseigné";
+  })()}
 </p>
 
 <p>
